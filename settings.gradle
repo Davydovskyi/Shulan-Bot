@@ -1,0 +1,3 @@
+rootProject.name = 'schulan-bot'
+include 'dispatcher'
+

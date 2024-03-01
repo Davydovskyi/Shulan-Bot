@@ -1,0 +1,16 @@
+server:
+  port: 8084
+
+bot:
+  username: schulan_bot
+  token: ${BOT_TOKEN:-------------------------------------}
+
+logging:
+  level:
+    root: info
+  file:
+    name: ./logs/application.log
+  logback:
+    rolling policy:
+      max-history: 3
+      max-file-size: 1MB
