@@ -3,7 +3,7 @@ server:
 
 bot:
   username: schulan_bot
-  token: ${BOT_TOKEN:----------------------------------}
+  token: ${BOT_TOKEN:------------------------------}
 
 logging:
   level:
@@ -19,8 +19,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: userok
-    password: p@ssw0rd
+    username: redfan
+    password: redfan
     queues:
       text-message-update: text_message_update
       doc-message-update: doc_message_update
