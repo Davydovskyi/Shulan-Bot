@@ -46,7 +46,4 @@ out
 .idea/
 
 /dispatcher/build/
-
-/module-repository/build/
-/module-service/build/
-/module-web/build/
+/common-rabbitmq/build/
