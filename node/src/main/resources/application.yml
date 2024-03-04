@@ -1,15 +1,11 @@
 server:
-  port: 8084
-
-bot:
-  username: schulan_bot
-  token: ${BOT_TOKEN:-----------------------------}
+  port: 8085
 
 logging:
   level:
     root: info
   file:
-    name: ./logs/dispatcher.log
+    name: ./logs/node.log
   logback:
     rolling policy:
       max-history: 3

@@ -47,3 +47,4 @@ out
 
 /dispatcher/build/
 /common-rabbitmq/build/
+/node/build/
