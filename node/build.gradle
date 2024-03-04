@@ -4,6 +4,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation "org.telegram:telegrambots-spring-boot-starter:$telegramStarterVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "io.hypersistence:hypersistence-utils-hibernate-60:$hypersistenceVersion"
+
+    runtimeOnly "org.postgresql:postgresql:$postgresSqlVersion"
+    runtimeOnly "org.flywaydb:flyway-core:$flywayDbVersion"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql:$flywayDbVersion"
 
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }

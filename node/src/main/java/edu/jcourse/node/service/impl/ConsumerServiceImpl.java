@@ -1,12 +1,11 @@
 package edu.jcourse.node.service.impl;
 
 import edu.jcourse.node.service.ConsumerService;
-import edu.jcourse.node.service.ProducerService;
+import edu.jcourse.node.service.MainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Service
@@ -14,19 +13,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 public class ConsumerServiceImpl implements ConsumerService {
 
-    private final ProducerService producerService;
+    private final MainService mainService;
 
     @Override
     @RabbitListener(queues = "${spring.rabbitmq.queues.text-message-update}")
     public void consumeTextMessageUpdates(Update update) {
         log.info("Node: Text message received");
 
-        SendMessage sendMessage = SendMessage.builder()
-                .text("Answer from node")
-                .chatId(update.getMessage().getChatId().toString())
-                .build();
-
-        producerService.producerAnswer(sendMessage);
+        mainService.processTextMessage(update);
     }
 
     @Override
