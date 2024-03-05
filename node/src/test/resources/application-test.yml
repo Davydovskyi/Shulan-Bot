@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    username: test
+    password: test
+  flyway:
+    url: jdbc:postgresql://localhost:5433/shulan
+    user: test
+    password: test
