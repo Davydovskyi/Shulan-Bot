@@ -48,3 +48,4 @@ out
 /dispatcher/build/
 /common-rabbitmq/build/
 /node/build/
+/common-jpa/build/
