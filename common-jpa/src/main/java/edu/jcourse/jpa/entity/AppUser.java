@@ -33,7 +33,7 @@ public class AppUser {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private boolean isActive;
     @Enumerated(EnumType.STRING)
     @Column(name = "user_state", nullable = false)
     private UserState userState;

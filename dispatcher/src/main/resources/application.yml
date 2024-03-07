@@ -3,7 +3,7 @@ server:
 
 bot:
   username: schulan_bot
-  token: ${BOT_TOKEN:-------------------------}
+  token: ${BOT_TOKEN:--------------------}
 
 logging:
   level:

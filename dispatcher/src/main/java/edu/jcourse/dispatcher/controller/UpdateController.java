@@ -2,13 +2,14 @@ package edu.jcourse.dispatcher.controller;
 
 import edu.jcourse.dispatcher.config.RabbitConfiguration;
 import edu.jcourse.dispatcher.service.UpdateProducer;
-import edu.jcourse.dispatcher.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static edu.jcourse.dispatcher.util.MessageUtil.*;
 
 @Component
 @Slf4j
@@ -50,14 +51,14 @@ public class UpdateController {
     }
 
     private void setUnsupportedMessageTypeView(Update update) {
-        SendMessage sendMessage = MessageUtil.generateSendMessageWithText(update,
-                "Unsupported message type!");
+        SendMessage sendMessage = generateSendMessageWithText(update,
+                UNSUPPORTED_MESSAGE_TYPE);
         setView(sendMessage);
     }
 
     private void setFileIsReceivedView(Update update) {
-        SendMessage sendMessage = MessageUtil.generateSendMessageWithText(update,
-                "File is received! Please, wait...");
+        SendMessage sendMessage = generateSendMessageWithText(update,
+                FILE_IS_RECEIVED);
         setView(sendMessage);
     }
 

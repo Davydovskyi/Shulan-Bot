@@ -19,7 +19,6 @@ public class ConsumerServiceImpl implements ConsumerService {
     @RabbitListener(queues = "${spring.rabbitmq.queues.text-message-update}")
     public void consumeTextMessageUpdates(Update update) {
         log.info("Node: Text message received");
-
         mainService.processTextMessage(update);
     }
 
@@ -27,11 +26,13 @@ public class ConsumerServiceImpl implements ConsumerService {
     @RabbitListener(queues = "${spring.rabbitmq.queues.doc-message-update}")
     public void consumeDocMessageUpdates(Update update) {
         log.info("Node: Doc message received");
+        mainService.processDocMessage(update);
     }
 
     @Override
     @RabbitListener(queues = "${spring.rabbitmq.queues.photo-message-update}")
     public void consumePhotoMessageUpdates(Update update) {
         log.info("Node: Photo message received");
+        mainService.processPhotoMessage(update);
     }
 }
