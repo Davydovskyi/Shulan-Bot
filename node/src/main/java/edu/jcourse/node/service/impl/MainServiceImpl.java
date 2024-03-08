@@ -1,10 +1,13 @@
 package edu.jcourse.node.service.impl;
 
+import edu.jcourse.jpa.entity.AppDocument;
 import edu.jcourse.jpa.entity.AppUser;
 import edu.jcourse.jpa.entity.UserState;
 import edu.jcourse.jpa.repository.AppUserRepository;
 import edu.jcourse.node.entity.RawData;
+import edu.jcourse.node.exception.UploadFileException;
 import edu.jcourse.node.repository.RawDataRepository;
+import edu.jcourse.node.service.FileService;
 import edu.jcourse.node.service.MainService;
 import edu.jcourse.node.service.ProducerService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import static edu.jcourse.jpa.entity.UserState.BASIC_STATE;
-import static edu.jcourse.jpa.entity.UserState.WAIT_FOR_EMAIL_STATE;
-import static edu.jcourse.node.service.enums.ServiceCommand.*;
+import static edu.jcourse.node.service.enums.ServiceCommand.CANCEL;
+import static edu.jcourse.node.service.enums.ServiceCommand.find;
 import static edu.jcourse.node.util.MessageUtil.*;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class MainServiceImpl implements MainService {
     private final RawDataRepository rawDataRepository;
     private final ProducerService producerService;
     private final AppUserRepository appUserRepository;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -40,27 +44,85 @@ public class MainServiceImpl implements MainService {
 
         UserState userState = appUser.getUserState();
         String text = message.getText();
-        String response = "";
+        String response;
 
         if (CANCEL.getCmd().equals(text)) {
             response = cancelProcess(appUser);
-        } else if (BASIC_STATE.equals(userState)) {
-            response = processServiceCommand(appUser, text);
-        } else if (WAIT_FOR_EMAIL_STATE.equals(userState)) {
-            //TODO добавить обработку емейла
         } else {
-            log.error("Unknown user state: " + userState);
-            response = UNKNOWN_ERROR_MESSAGE;
+            response = switch (userState) {
+                case BASIC_STATE -> processServiceCommand(appUser, text);
+                case WAIT_FOR_EMAIL_STATE -> "null"; // TODO добавить обработку емейла
+                default -> {
+                    log.error("Unknown user state: " + userState);
+                    yield UNKNOWN_ERROR_MESSAGE;
+                }
+            };
         }
 
         sendAnswer(response, message.getChatId());
     }
 
-    private void saveRawData(Update update) {
-        RawData rawData = RawData.builder()
-                .event(update)
-                .build();
-        rawDataRepository.save(rawData);
+    @Transactional
+    @Override
+    public void processDocMessage(Update update) {
+        saveRawData(update);
+
+        AppUser appUser = findOrSaveAppUser(update);
+        Long chatId = update.getMessage().getChatId();
+        if (!isAllowedToSendContent(chatId, appUser)) {
+            return;
+        }
+
+        try {
+            AppDocument doc = fileService.processDoc(update.getMessage());
+            //TODO Добавить генерацию ссылки для скачивания документа
+            sendAnswer(DOC_IS_UPLOADED_MESSAGE, chatId);
+        } catch (UploadFileException ex) {
+            log.error("Upload file error", ex);
+            sendAnswer(UPLOAD_FILE_ERROR_MESSAGE, chatId);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void processPhotoMessage(Update update) {
+        saveRawData(update);
+
+        AppUser appUser = findOrSaveAppUser(update);
+        Long chatId = update.getMessage().getChatId();
+        if (isAllowedToSendContent(chatId, appUser)) {
+            //TODO добавить сохранения фото
+            sendAnswer(PHOTO_IS_UPLOADED_MESSAGE, chatId);
+        }
+    }
+
+    private boolean isAllowedToSendContent(Long chatId, AppUser appUser) {
+        UserState userState = appUser.getUserState();
+        if (!appUser.isActive()) {
+            sendAnswer(USER_NOT_ACTIVE_MESSAGE, chatId);
+            return false;
+        } else if (!BASIC_STATE.equals(userState)) {
+            sendAnswer(CANCEL_CURRENT_COMMAND_MESSAGE, chatId);
+            return false;
+        }
+        return true;
+    }
+
+    private String processServiceCommand(AppUser appUser, String cmd) {
+        return find(cmd)
+                .map(serviceCommand -> switch (serviceCommand) {
+                    case HELP -> HELP_MESSAGE;
+                    case START -> START_MESSAGE;
+                    case REGISTRATION -> "Registration is not implemented yet!"; //TODO добавить регистрацию
+                    default -> NOT_IMPLEMENTED_YET_MESSAGE;
+                })
+                .orElse(UNKNOWN_COMMAND_MESSAGE);
+    }
+
+    private String cancelProcess(AppUser appUser) {
+        appUser.setUserState(BASIC_STATE);
+        appUserRepository.saveAndFlush(appUser);
+        return CANCEL_PROCESS_MESSAGE;
     }
 
     private AppUser findOrSaveAppUser(Update update) {
@@ -80,42 +142,11 @@ public class MainServiceImpl implements MainService {
                 });
     }
 
-    @Transactional
-    @Override
-    public void processDocMessage(Update update) {
-        saveRawData(update);
-
-        AppUser appUser = findOrSaveAppUser(update);
-        Long chatId = update.getMessage().getChatId();
-        if (isAllowedToSendContent(chatId, appUser)) {
-            //TODO добавить сохранения документа
-            sendAnswer(DOC_IS_DOWNLOADED_MESSAGE, chatId);
-        }
-    }
-
-    @Transactional
-    @Override
-    public void processPhotoMessage(Update update) {
-        saveRawData(update);
-
-        var appUser = findOrSaveAppUser(update);
-        var chatId = update.getMessage().getChatId();
-        if (isAllowedToSendContent(chatId, appUser)) {
-            //TODO добавить сохранения фото
-            sendAnswer(PHOTO_IS_DOWNLOADED_MESSAGE, chatId);
-        }
-    }
-
-    private boolean isAllowedToSendContent(Long chatId, AppUser appUser) {
-        UserState userState = appUser.getUserState();
-        if (!appUser.isActive()) {
-            sendAnswer(USER_NOT_ACTIVE_MESSAGE, chatId);
-            return false;
-        } else if (!BASIC_STATE.equals(userState)) {
-            sendAnswer(CANCEL_CURRENT_COMMAND_MESSAGE, chatId);
-            return false;
-        }
-        return true;
+    private void saveRawData(Update update) {
+        RawData rawData = RawData.builder()
+                .event(update)
+                .build();
+        rawDataRepository.save(rawData);
     }
 
     private void sendAnswer(String output, Long chatId) {
@@ -124,24 +155,5 @@ public class MainServiceImpl implements MainService {
                 .chatId(chatId)
                 .build();
         producerService.producerAnswer(sendMessage);
-    }
-
-    private String processServiceCommand(AppUser appUser, String cmd) {
-        if (REGISTRATION.getCmd().equals(cmd)) {
-            //TODO добавить регистрацию
-            return "Registration is not implemented yet!";
-        } else if (HELP.getCmd().equals(cmd)) {
-            return HELP_MESSAGE;
-        } else if (START.getCmd().equals(cmd)) {
-            return START_MESSAGE;
-        } else {
-            return UNKNOWN_COMMAND_MESSAGE;
-        }
-    }
-
-    private String cancelProcess(AppUser appUser) {
-        appUser.setUserState(BASIC_STATE);
-        appUserRepository.saveAndFlush(appUser);
-        return CANCEL_PROCESS_MESSAGE;
     }
 }
