@@ -3,8 +3,10 @@ package edu.jcourse.node.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.jcourse.jpa.entity.AppDocument;
+import edu.jcourse.jpa.entity.AppPhoto;
 import edu.jcourse.jpa.entity.BinaryContent;
 import edu.jcourse.jpa.repository.AppDocumentRepository;
+import edu.jcourse.jpa.repository.AppPhotoRepository;
 import edu.jcourse.jpa.repository.BinaryContentRepository;
 import edu.jcourse.node.exception.UploadFileException;
 import edu.jcourse.node.service.FileService;
@@ -18,10 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+
+import static edu.jcourse.node.util.MessageUtil.UPLOAD_ERROR_MESSAGE;
 
 @Slf4j
 @Service
@@ -29,6 +34,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
     private final AppDocumentRepository appDocumentRepository;
+    private final AppPhotoRepository appPhotoRepository;
     private final BinaryContentRepository binaryContentRepository;
     private final ObjectMapper objectMapper;
     @Value("${bot.token}")
@@ -40,19 +46,31 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public AppDocument processDoc(Message message) {
-        String fileId = message.getDocument().getFileId();
+    public AppDocument processDoc(Message telegramMessage) {
+        String fileId = telegramMessage.getDocument().getFileId();
         ResponseEntity<String> response = getFilePath(fileId);
         if (response.getStatusCode() == HttpStatus.OK) {
-            String filePath = getFilePath(response);
-            byte[] fileInByte = downloadFile(filePath);
-
-            BinaryContent binaryContent = BinaryContent.builder().content(fileInByte).build();
-            BinaryContent persistentBinaryContent = binaryContentRepository.save(binaryContent);
-            AppDocument appDocument = buildAppDocument(message.getDocument(), persistentBinaryContent);
+            BinaryContent persistentBinaryContent = getBinaryContent(response);
+            AppDocument appDocument = buildAppDocument(telegramMessage.getDocument(), persistentBinaryContent);
             return appDocumentRepository.save(appDocument);
         } else {
-            throw new UploadFileException("Bad response from telegram service: " + response);
+            throw new UploadFileException(UPLOAD_ERROR_MESSAGE + response);
+        }
+    }
+
+    @Override
+    @Transactional
+    public AppPhoto processPhoto(Message telegramMessage) {
+        //TODO пока что обрабатываем только одно фото в сообщении
+        PhotoSize telegramPhoto = telegramMessage.getPhoto().getFirst();
+        String fileId = telegramPhoto.getFileId();
+        ResponseEntity<String> response = getFilePath(fileId);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            BinaryContent persistentBinaryContent = getBinaryContent(response);
+            AppPhoto transientAppPhoto = buildAppPhoto(telegramPhoto, persistentBinaryContent);
+            return appPhotoRepository.save(transientAppPhoto);
+        } else {
+            throw new UploadFileException(UPLOAD_ERROR_MESSAGE + response);
         }
     }
 
@@ -64,6 +82,23 @@ public class FileServiceImpl implements FileService {
                 .mimeType(telegramDoc.getMimeType())
                 .fileSize(telegramDoc.getFileSize())
                 .build();
+    }
+
+    private AppPhoto buildAppPhoto(PhotoSize telegramPhoto, BinaryContent persistentBinaryContent) {
+        return AppPhoto.builder()
+                .telegramFileId(telegramPhoto.getFileId())
+                .binaryContent(persistentBinaryContent)
+                .fileSize(telegramPhoto.getFileSize())
+                .build();
+    }
+
+    private BinaryContent getBinaryContent(ResponseEntity<String> response) {
+        String filePath = getFilePath(response);
+        byte[] fileInByte = downloadFile(filePath);
+        BinaryContent transientBinaryContent = BinaryContent.builder()
+                .content(fileInByte)
+                .build();
+        return binaryContentRepository.save(transientBinaryContent);
     }
 
     @SneakyThrows

@@ -1,6 +1,7 @@
 package edu.jcourse.node.service.impl;
 
 import edu.jcourse.jpa.entity.AppDocument;
+import edu.jcourse.jpa.entity.AppPhoto;
 import edu.jcourse.jpa.entity.AppUser;
 import edu.jcourse.jpa.entity.UserState;
 import edu.jcourse.jpa.repository.AppUserRepository;
@@ -90,9 +91,17 @@ public class MainServiceImpl implements MainService {
 
         AppUser appUser = findOrSaveAppUser(update);
         Long chatId = update.getMessage().getChatId();
-        if (isAllowedToSendContent(chatId, appUser)) {
-            //TODO добавить сохранения фото
+        if (!isAllowedToSendContent(chatId, appUser)) {
+            return;
+        }
+
+        try {
+            AppPhoto photo = fileService.processPhoto(update.getMessage());
+            //TODO добавить генерацию ссылки для скачивания фото
             sendAnswer(PHOTO_IS_UPLOADED_MESSAGE, chatId);
+        } catch (UploadFileException ex) {
+            log.error("Upload file error", ex);
+            sendAnswer(UPLOAD_PHOTO_ERROR_MESSAGE, chatId);
         }
     }
 

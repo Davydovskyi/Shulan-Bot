@@ -19,4 +19,6 @@ public class MessageUtil {
     public static final String CANCEL_CURRENT_COMMAND_MESSAGE = "Cancel the current command by typing /cancel to upload the files.";
     public static final String NOT_IMPLEMENTED_YET_MESSAGE = "Not implemented yet!";
     public static final String UPLOAD_FILE_ERROR_MESSAGE = "Error while uploading file! Please try again";
+    public static final String UPLOAD_PHOTO_ERROR_MESSAGE = "Error while uploading photo! Please try again";
+    public static final String UPLOAD_ERROR_MESSAGE = "Bad response from telegram service: ";
 }
