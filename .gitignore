@@ -49,3 +49,4 @@ out
 /common-rabbitmq/build/
 /node/build/
 /common-jpa/build/
+/rest-service/build/

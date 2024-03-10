@@ -2,7 +2,7 @@ server:
   port: 8085
 
 bot:
-  token: ${BOT_TOKEN:-------------------}
+  token: ${BOT_TOKEN:-----------------------}
   service:
     file-info:
       uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}
