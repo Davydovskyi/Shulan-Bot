@@ -7,7 +7,7 @@ app:
   photo-salt: C220VomyPV0yTNTqiK8j
 
 bot:
-  token: ${BOT_TOKEN:--------------------------}
+  token: ${BOT_TOKEN:-------------------------------------}
   service:
     file-info:
       uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}

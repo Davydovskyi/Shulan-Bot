@@ -1,0 +1,26 @@
+server:
+  port: 8087
+
+service:
+  activation:
+    uri: http://127.0.0.1:8085/mail/activation/{id}
+
+
+logging:
+  level:
+    root: info
+  file:
+    name: ./logs/mail-service.log
+  logback:
+    rolling policy:
+      max-history: 3
+      max-file-size: 1MB
+
+
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    protocol: smtps
+    username:
+    password:

@@ -51,3 +51,4 @@ out
 /common-jpa/build/
 /rest-service/build/
 /common-utils/build/
+/mail-service/build/
