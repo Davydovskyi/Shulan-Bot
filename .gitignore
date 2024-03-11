@@ -50,3 +50,4 @@ out
 /node/build/
 /common-jpa/build/
 /rest-service/build/
+/common-utils/build/

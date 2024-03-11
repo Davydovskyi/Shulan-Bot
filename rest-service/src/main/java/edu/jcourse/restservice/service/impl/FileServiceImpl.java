@@ -6,6 +6,7 @@ import edu.jcourse.jpa.entity.BinaryContent;
 import edu.jcourse.jpa.repository.AppDocumentRepository;
 import edu.jcourse.jpa.repository.AppPhotoRepository;
 import edu.jcourse.restservice.service.FileService;
+import edu.jcourse.util.CryptoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -24,19 +25,21 @@ import java.util.Optional;
 public class FileServiceImpl implements FileService {
     private final AppDocumentRepository appDocumentRepository;
     private final AppPhotoRepository appPhotoRepository;
+    private final CryptoUtil docCryptoUtil;
+    private final CryptoUtil photoCryptoUtil;
 
     @Override
     public Optional<AppDocument> getDocument(String docId) {
-        //TODO добавить дешифрование хеш-строки
-        Long id = Long.parseLong(docId);
-        return appDocumentRepository.findById(id);
+        return Optional.ofNullable(docId)
+                .map(docCryptoUtil::decrypt)
+                .flatMap(appDocumentRepository::findById);
     }
 
     @Override
     public Optional<AppPhoto> getPhoto(String photoId) {
-        //TODO добавить дешифрование хеш-строки
-        Long id = Long.parseLong(photoId);
-        return appPhotoRepository.findById(id);
+        return Optional.ofNullable(photoId)
+                .map(photoCryptoUtil::decrypt)
+                .flatMap(appPhotoRepository::findById);
     }
 
     @Override

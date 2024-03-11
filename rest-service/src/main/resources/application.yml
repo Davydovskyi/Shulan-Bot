@@ -1,6 +1,10 @@
 server:
   port: 8086
 
+app:
+  doc-salt: YwgQfxWvap1sEMY63pNU
+  photo-salt: C220VomyPV0yTNTqiK8j
+
 logging:
   level:
     root: info

@@ -10,6 +10,8 @@ import edu.jcourse.jpa.repository.AppPhotoRepository;
 import edu.jcourse.jpa.repository.BinaryContentRepository;
 import edu.jcourse.node.exception.UploadFileException;
 import edu.jcourse.node.service.FileService;
+import edu.jcourse.node.service.enums.LinkType;
+import edu.jcourse.util.CryptoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,8 @@ public class FileServiceImpl implements FileService {
     private String fileInfoUri;
     @Value("${bot.service.file-storage.uri}")
     private String fileStorageUri;
+    @Value("${app.link-for-files}")
+    private String linkAddress;
 
     @Override
     @Transactional
@@ -61,8 +65,7 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional
     public AppPhoto processPhoto(Message telegramMessage) {
-        //TODO пока что обрабатываем только одно фото в сообщении
-        PhotoSize telegramPhoto = telegramMessage.getPhoto().getFirst();
+        PhotoSize telegramPhoto = telegramMessage.getPhoto().getLast();
         String fileId = telegramPhoto.getFileId();
         ResponseEntity<String> response = getFilePath(fileId);
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -72,6 +75,11 @@ public class FileServiceImpl implements FileService {
         } else {
             throw new UploadFileException(UPLOAD_ERROR_MESSAGE + response);
         }
+    }
+
+    @Override
+    public String generateLink(Long id, LinkType linkType, CryptoUtil cryptoUtil) {
+        return linkAddress + linkType.getLink() + cryptoUtil.encrypt(id);
     }
 
     private AppDocument buildAppDocument(Document telegramDoc, BinaryContent persistentBinaryContent) {

@@ -11,6 +11,8 @@ import edu.jcourse.node.repository.RawDataRepository;
 import edu.jcourse.node.service.FileService;
 import edu.jcourse.node.service.MainService;
 import edu.jcourse.node.service.ProducerService;
+import edu.jcourse.node.service.enums.LinkType;
+import edu.jcourse.util.CryptoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,8 @@ public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final AppUserRepository appUserRepository;
     private final FileService fileService;
+    private final CryptoUtil docCryptoUtil;
+    private final CryptoUtil photoCryptoUtil;
 
     @Transactional
     @Override
@@ -70,14 +74,14 @@ public class MainServiceImpl implements MainService {
 
         AppUser appUser = findOrSaveAppUser(update);
         Long chatId = update.getMessage().getChatId();
-        if (!isAllowedToSendContent(chatId, appUser)) {
+        if (isNotAllowedToSendContent(chatId, appUser)) {
             return;
         }
 
         try {
             AppDocument doc = fileService.processDoc(update.getMessage());
-            //TODO Добавить генерацию ссылки для скачивания документа
-            sendAnswer(DOC_IS_UPLOADED_MESSAGE, chatId);
+            String link = fileService.generateLink(doc.getId(), LinkType.GET_DOC, docCryptoUtil);
+            sendAnswer(DOC_IS_UPLOADED_MESSAGE.formatted(link), chatId);
         } catch (UploadFileException ex) {
             log.error("Upload file error", ex);
             sendAnswer(UPLOAD_FILE_ERROR_MESSAGE, chatId);
@@ -91,30 +95,30 @@ public class MainServiceImpl implements MainService {
 
         AppUser appUser = findOrSaveAppUser(update);
         Long chatId = update.getMessage().getChatId();
-        if (!isAllowedToSendContent(chatId, appUser)) {
+        if (isNotAllowedToSendContent(chatId, appUser)) {
             return;
         }
 
         try {
             AppPhoto photo = fileService.processPhoto(update.getMessage());
-            //TODO добавить генерацию ссылки для скачивания фото
-            sendAnswer(PHOTO_IS_UPLOADED_MESSAGE, chatId);
+            String link = fileService.generateLink(photo.getId(), LinkType.GET_PHOTO, photoCryptoUtil);
+            sendAnswer(PHOTO_IS_UPLOADED_MESSAGE.formatted(link), chatId);
         } catch (UploadFileException ex) {
             log.error("Upload file error", ex);
             sendAnswer(UPLOAD_PHOTO_ERROR_MESSAGE, chatId);
         }
     }
 
-    private boolean isAllowedToSendContent(Long chatId, AppUser appUser) {
+    private boolean isNotAllowedToSendContent(Long chatId, AppUser appUser) {
         UserState userState = appUser.getUserState();
         if (!appUser.isActive()) {
             sendAnswer(USER_NOT_ACTIVE_MESSAGE, chatId);
-            return false;
+            return true;
         } else if (!BASIC_STATE.equals(userState)) {
             sendAnswer(CANCEL_CURRENT_COMMAND_MESSAGE, chatId);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private String processServiceCommand(AppUser appUser, String cmd) {

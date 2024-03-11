@@ -3,4 +3,5 @@ include 'dispatcher'
 include 'node'
 include 'common-jpa'
 include 'rest-service'
+include 'common-utils'
 

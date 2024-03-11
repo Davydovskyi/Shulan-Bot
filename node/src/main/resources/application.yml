@@ -1,8 +1,13 @@
 server:
   port: 8085
 
+app:
+  link-for-files: http://127.0.0.1:8086/
+  doc-salt: YwgQfxWvap1sEMY63pNU
+  photo-salt: C220VomyPV0yTNTqiK8j
+
 bot:
-  token: ${BOT_TOKEN:-----------------------}
+  token: ${BOT_TOKEN:--------------------------}
   service:
     file-info:
       uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}

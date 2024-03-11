@@ -2,6 +2,7 @@ version = '1.0'
 
 dependencies {
     implementation project(':common-jpa')
+    implementation project(':common-utils')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation "org.telegram:telegrambots-spring-boot-starter:$telegramStarterVersion"
