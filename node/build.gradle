@@ -8,6 +8,7 @@ dependencies {
     implementation "org.telegram:telegrambots-spring-boot-starter:$telegramStarterVersion"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "io.hypersistence:hypersistence-utils-hibernate-60:$hypersistenceVersion"
+    implementation "jakarta.mail:jakarta.mail-api:$jakartaMailVersion"
 
     runtimeOnly "org.postgresql:postgresql:$postgresSqlVersion"
     runtimeOnly "org.flywaydb:flyway-core:$flywayDbVersion"

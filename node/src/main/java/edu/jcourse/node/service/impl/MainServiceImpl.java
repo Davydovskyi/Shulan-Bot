@@ -8,6 +8,7 @@ import edu.jcourse.jpa.repository.AppUserRepository;
 import edu.jcourse.node.entity.RawData;
 import edu.jcourse.node.exception.UploadFileException;
 import edu.jcourse.node.repository.RawDataRepository;
+import edu.jcourse.node.service.AppUserService;
 import edu.jcourse.node.service.FileService;
 import edu.jcourse.node.service.MainService;
 import edu.jcourse.node.service.ProducerService;
@@ -38,6 +39,7 @@ public class MainServiceImpl implements MainService {
     private final FileService fileService;
     private final CryptoUtil docCryptoUtil;
     private final CryptoUtil photoCryptoUtil;
+    private final AppUserService appUserService;
 
     @Transactional
     @Override
@@ -56,7 +58,7 @@ public class MainServiceImpl implements MainService {
         } else {
             response = switch (userState) {
                 case BASIC_STATE -> processServiceCommand(appUser, text);
-                case WAIT_FOR_EMAIL_STATE -> "null"; // TODO добавить обработку емейла
+                case WAIT_FOR_EMAIL_STATE -> appUserService.setEmail(appUser, text);
                 default -> {
                     log.error("Unknown user state: " + userState);
                     yield UNKNOWN_ERROR_MESSAGE;
@@ -126,7 +128,7 @@ public class MainServiceImpl implements MainService {
                 .map(serviceCommand -> switch (serviceCommand) {
                     case HELP -> HELP_MESSAGE;
                     case START -> START_MESSAGE;
-                    case REGISTRATION -> "Registration is not implemented yet!"; //TODO добавить регистрацию
+                    case REGISTRATION -> appUserService.registerUser(appUser);
                     default -> NOT_IMPLEMENTED_YET_MESSAGE;
                 })
                 .orElse(UNKNOWN_COMMAND_MESSAGE);
@@ -147,8 +149,7 @@ public class MainServiceImpl implements MainService {
                             .firstName(telegramUser.getFirstName())
                             .lastName(telegramUser.getLastName())
                             .username(telegramUser.getUserName())
-                            .email("telegram%d@mock.com".formatted(telegramUser.getId()))
-                            .isActive(true)
+                            .isActive(false)
                             .userState(BASIC_STATE)
                             .build();
                     return appUserRepository.save(appUser);

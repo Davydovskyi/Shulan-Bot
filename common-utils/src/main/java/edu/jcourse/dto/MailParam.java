@@ -1,4 +1,4 @@
-package edu.jcourse.mail.dto;
+package edu.jcourse.dto;
 
 import lombok.Builder;
 

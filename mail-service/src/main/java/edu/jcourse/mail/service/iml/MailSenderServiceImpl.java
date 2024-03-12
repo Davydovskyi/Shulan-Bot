@@ -1,6 +1,7 @@
 package edu.jcourse.mail.service.iml;
 
-import edu.jcourse.mail.dto.MailParam;
+
+import edu.jcourse.dto.MailParam;
 import edu.jcourse.mail.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

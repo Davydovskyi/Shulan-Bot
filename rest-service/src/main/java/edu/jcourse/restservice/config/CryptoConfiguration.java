@@ -7,18 +7,25 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CryptoConfiguration {
-    @Value("${app.doc-salt}")
-    private String docSalt;
-    @Value("${app.photo-salt}")
-    private String photoSalt;
+    @Value("${app.doc-secret}")
+    private String docSecret;
+    @Value("${app.photo-secret}")
+    private String photoSecret;
+    @Value("${app.user-secret}")
+    private String userSecret;
 
     @Bean
     public CryptoUtil docCryptoUtil() {
-        return new CryptoUtil(docSalt);
+        return new CryptoUtil(docSecret);
     }
 
     @Bean
     public CryptoUtil photoCryptoUtil() {
-        return new CryptoUtil(photoSalt);
+        return new CryptoUtil(photoSecret);
+    }
+
+    @Bean
+    public CryptoUtil userCryptoUtil() {
+        return new CryptoUtil(userSecret);
     }
 }

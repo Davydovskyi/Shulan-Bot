@@ -1,6 +1,7 @@
 package edu.jcourse.mail.controller;
 
-import edu.jcourse.mail.dto.MailParam;
+
+import edu.jcourse.dto.MailParam;
 import edu.jcourse.mail.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -30,7 +30,7 @@ public class AppUser {
     private String lastName;
     @Column(name = "username", nullable = false)
     private String username;
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
