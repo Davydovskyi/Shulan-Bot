@@ -55,24 +55,24 @@ public class AppUserServiceImpl implements AppUserService {
         }
 
         Optional<AppUser> user = appUserRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            appUser.setEmail(email);
-            appUser.setUserState(BASIC_STATE);
-            appUser = appUserRepository.saveAndFlush(appUser);
-
-            String cryptoUserId = userCryptoUtil.encrypt(appUser.getId());
-            ResponseEntity<String> response = sendRequestToMailService(cryptoUserId, email);
-            if (response.getStatusCode() != HttpStatus.OK) {
-                String message = SEND_EMAIL_ERROR_MESSAGE.formatted(email);
-                log.error(message);
-                appUser.setEmail(null);
-                appUserRepository.saveAndFlush(appUser);
-                return message;
-            }
-            return EMAIL_SENT_MESSAGE;
-        } else {
+        if (user.isPresent()) {
             return EMAIL_ALREADY_EXIST;
         }
+
+        appUser.setEmail(email);
+        appUser.setUserState(BASIC_STATE);
+        appUser = appUserRepository.saveAndFlush(appUser);
+
+        String cryptoUserId = userCryptoUtil.encrypt(appUser.getId());
+        ResponseEntity<String> response = sendRequestToMailService(cryptoUserId, email);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            String message = SEND_EMAIL_ERROR_MESSAGE.formatted(email);
+            log.error(message);
+            appUser.setEmail(null);
+            appUserRepository.saveAndFlush(appUser);
+            return message;
+        }
+        return EMAIL_SENT_MESSAGE;
     }
 
     private ResponseEntity<String> sendRequestToMailService(String cryptoUserId, String email) {

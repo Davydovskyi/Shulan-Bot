@@ -41,18 +41,4 @@ public class FileServiceImpl implements FileService {
                 .map(photoCryptoUtil::decrypt)
                 .flatMap(appPhotoRepository::findById);
     }
-
-    @Override
-    public Optional<FileSystemResource> getFileSystemResource(BinaryContent binaryContent) {
-        try {
-            //TODO добавить генерацию имени временного файла
-            File file = File.createTempFile("tempFile", ".bin");
-            Files.write(file.toPath(), binaryContent.getContent());
-            file.deleteOnExit();
-            return Optional.of(new FileSystemResource(file));
-        } catch (IOException e) {
-            log.error("Error creating temp file", e);
-            return Optional.empty();
-        }
-    }
 }

@@ -14,7 +14,7 @@ import static edu.jcourse.dispatcher.util.MessageUtil.*;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class UpdateController {
+public class UpdateProcessor {
     private final UpdateProducer updateProducer;
     private final RabbitConfiguration rabbitConfiguration;
     private TelegramBot telegramBot;

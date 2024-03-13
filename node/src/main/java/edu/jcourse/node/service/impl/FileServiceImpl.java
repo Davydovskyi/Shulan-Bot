@@ -134,7 +134,7 @@ public class FileServiceImpl implements FileService {
                 .replace("{token}", token)
                 .replace("{filePath}", filePath);
 
-        //TODO подумать над оптимизацией
+        //TODO подумать над оптимизацией (записывать и выгружать файл порциями, достал - записал в outputStream, пошел за следующим)
         try (InputStream is = URI.create(fullUri).toURL().openStream()) {
             return is.readAllBytes();
         } catch (IOException e) {
