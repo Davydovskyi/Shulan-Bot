@@ -1,15 +1,13 @@
 server:
   port: 8084
   ssl:
-    enabled: false # it needs for correct working Webhook
-#   app - http -> proxyServer -> https -> Telegram server
-#   app - http <- proxyServer <- https <- Telegram server
+    enabled: false
 
 # (terminal) ssh -R 80:localhost:<port> serveo.net to create tunnel
 bot:
-  uri: https://dd4fbe31781d144183591b70b8ba6804.serveo.net  # final uri will be <bot.uri> + </callback>(from telegram lib) + </update>
+  uri: https://dd4fbe31781d144183591b70b8ba6804.serveo.net
   username: schulan_bot
-  token: ${BOT_TOKEN:-----------------------------------------}
+  token: ${BOT_TOKEN:----------------------------}
 
 logging:
   level:

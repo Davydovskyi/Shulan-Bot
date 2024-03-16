@@ -21,5 +21,12 @@ spring:
     host: smtp.mail.ru
     port: 465
     protocol: smtps
-    username: ------------------
-    password: ------------------
+    username: ----------------
+    password: ----------------
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: redfan
+    password: redfan
+    queues:
+      registration-mail: registration_mail

@@ -25,6 +25,5 @@ public class MessageUtil {
     public static final String EMAIL_SENT_MESSAGE = "You have already been sent an email. Confirm your registration by following the link in the email";
     public static final String ENTER_EMAIL_MESSAGE = "Enter your email: ";
     public static final String EMAIL_INVALID_MESSAGE = "Enter a valid email. For cancel type /cancel";
-    public static final String SEND_EMAIL_ERROR_MESSAGE = "Error while sending email to: %s. Please try again";
     public static final String EMAIL_ALREADY_EXIST = "This email already exists. Enter another email or type /cancel";
 }

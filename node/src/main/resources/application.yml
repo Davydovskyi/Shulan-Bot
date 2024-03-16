@@ -1,10 +1,6 @@
 server:
   port: 8085
 
-service:
-  mail:
-    uri: http://127.0.0.1:8087/mail/send
-
 app:
   link-for-files: http://127.0.0.1:8086/
   doc-secret: YwgQfxWvap1sEMY63pNU
@@ -12,7 +8,7 @@ app:
   user-secret: hhuYny0KKbu5kBGWd2cK
 
 bot:
-  token: ${BOT_TOKEN:---------------------}
+  token: ${BOT_TOKEN:------------------------------}
   service:
     file-info:
       uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}
@@ -62,3 +58,4 @@ spring:
       doc-message-update: doc_message_update
       photo-message-update: photo_message_update
       answer-message: answer_message
+      registration-mail: registration_mail

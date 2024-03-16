@@ -2,20 +2,15 @@ package edu.jcourse.restservice.service.impl;
 
 import edu.jcourse.jpa.entity.AppDocument;
 import edu.jcourse.jpa.entity.AppPhoto;
-import edu.jcourse.jpa.entity.BinaryContent;
 import edu.jcourse.jpa.repository.AppDocumentRepository;
 import edu.jcourse.jpa.repository.AppPhotoRepository;
 import edu.jcourse.restservice.service.FileService;
 import edu.jcourse.util.CryptoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Optional;
 
 @Slf4j

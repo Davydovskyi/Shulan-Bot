@@ -24,7 +24,6 @@ import java.util.Optional;
 public class FileController {
     private final FileService fileService;
 
-    // this changes need because temp files - they can be deleted only after server restart, so it may cause problems
     @GetMapping("/get-doc/{id}")
     public void getDoc(@PathVariable String id,
                        HttpServletResponse response) {

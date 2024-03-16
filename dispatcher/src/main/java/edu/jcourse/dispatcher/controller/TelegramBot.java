@@ -14,10 +14,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 @Slf4j
 public class TelegramBot extends TelegramWebhookBot {
-    // Long(значит не сразу разрывает соедение с сервером) polling - периодически отправляем запрос на сервер(TG) для получения обновлений ("- есть что для меня? - есть, забирай")
-    // Webhook - Мы выставляем наружу какой-то адрес(URL, IP) и говорим серверу(TG) если что-будет то присылай нам. ("-вот тебе точкаб шли сюда вс1 по мере поступления")
-    // нужен белый IP + настройка сертефекатов для HTTPS, SSL
-
     private final UpdateProcessor updateProcessor;
     @Value("${bot.username}")
     private String botUsername;

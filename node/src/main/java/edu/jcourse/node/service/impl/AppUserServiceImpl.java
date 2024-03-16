@@ -9,11 +9,10 @@ import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -28,8 +27,9 @@ import static edu.jcourse.node.util.MessageUtil.*;
 public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final CryptoUtil userCryptoUtil;
-    @Value("${service.mail.uri}")
-    private String mailServiceUri;
+    private final RabbitTemplate rabbitTemplate;
+    @Value("${spring.rabbitmq.queues.registration-mail}")
+    private String registrationMailQueue;
 
     @Transactional
     @Override
@@ -64,30 +64,15 @@ public class AppUserServiceImpl implements AppUserService {
         appUser = appUserRepository.saveAndFlush(appUser);
 
         String cryptoUserId = userCryptoUtil.encrypt(appUser.getId());
-        ResponseEntity<String> response = sendRequestToMailService(cryptoUserId, email);
-        if (response.getStatusCode() != HttpStatus.OK) {
-            String message = SEND_EMAIL_ERROR_MESSAGE.formatted(email);
-            log.error(message);
-            appUser.setEmail(null);
-            appUserRepository.saveAndFlush(appUser);
-            return message;
-        }
+        sendRegistrationMail(cryptoUserId, email);
         return EMAIL_SENT_MESSAGE;
     }
 
-    private ResponseEntity<String> sendRequestToMailService(String cryptoUserId, String email) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    private void sendRegistrationMail(String cryptoUserId, String email) {
         MailParam mailParams = MailParam.builder()
                 .id(cryptoUserId)
                 .emailTo(email)
                 .build();
-        HttpEntity<MailParam> request = new HttpEntity<>(mailParams, headers);
-        return restTemplate.exchange(
-                mailServiceUri,
-                HttpMethod.POST,
-                request,
-                String.class);
+        rabbitTemplate.convertAndSend(registrationMailQueue, mailParams);
     }
 }
