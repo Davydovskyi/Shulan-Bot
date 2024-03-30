@@ -26,8 +26,13 @@ The application has a microservice architecture.
 - `common-jpa` - contains general code for interacting with the database;
 - `common-utils` - contains code for encrypting and decrypting identifiers;
 
+### Database Structure:
+
+![](./media/db_structure.PNG "db_structure")
+
 ### Common Stack:
 
+- Java 21
 - Spring Boot 3
 - PostgreSQL
 - RabbitMQ
