@@ -60,7 +60,7 @@ The application has a microservice architecture.
 - Spring Web
 - Java Mail Service
 
-### Rest Service
+#### Rest Service
 
 - Spring Data JPA
 - Spring Web
