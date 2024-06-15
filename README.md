@@ -23,8 +23,7 @@ The application has a microservice architecture.
 - `rest-service` - microservice for downloading files from the database using a link;
     - user activation confirmation;
     - downloading files from database;
-- `common-jpa` - contains general code for interacting with the database;
-- `common-utils` - contains code for encrypting and decrypting identifiers;
+- `common` - contains general code for interacting with the database and code for encrypting and decrypting identifiers;
 
 ### Database Structure:
 
@@ -44,7 +43,7 @@ The application has a microservice architecture.
 - Spring Web
 - [Telegram Bot Java Library](https://github.com/rubenlagus/TelegramBots)<br>
   `Supports both Webhooks and Long Polling methods`<br>
-  `For WebHooks I used a proxy server` [Serveo](https://serveo.net/)
+  `For WebHooks I used the proxy server` [Serveo](https://serveo.net/)
 
 #### Node:
 
@@ -65,10 +64,7 @@ The application has a microservice architecture.
 - Spring Data JPA
 - Spring Web
 
-#### Common JPA:
+#### Common:
 
 - Spring Data JPA
-
-#### Common-Utils:
-
 - Hashids
