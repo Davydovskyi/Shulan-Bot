@@ -2,4 +2,5 @@ version = '1.0'
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.hashids:hashids:$hashidsVersion"
 }

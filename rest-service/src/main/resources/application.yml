@@ -1,10 +1,10 @@
 server:
-  port: 8086
+  port: ${REST_SERVICE_PORT:8086}
 
 app:
-  doc-secret: YwgQfxWvap1sEMY63pNU
-  photo-secret: C220VomyPV0yTNTqiK8j
-  user-secret: hhuYny0KKbu5kBGWd2cK
+  doc-secret: ${DOC_SECRET:YwgQfxWvap1sEMY63pNU}
+  photo-secret: ${PHOTO_SECRET:C220VomyPV0yTNTqiK8j}
+  user-secret: ${USER_SECRET:hhuYny0KKbu5kBGWd2cK}
 
 logging:
   level:
@@ -18,9 +18,9 @@ logging:
 
 spring:
   datasource:
-    username: postgres
-    password: postgres
-    url: jdbc:postgresql://localhost:5433/shulan
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5433/shulan}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false

@@ -1,6 +1,7 @@
 package edu.jcourse.restservice.controller;
 
 import edu.jcourse.restservice.service.UserActivationService;
+import edu.jcourse.restservice.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,6 @@ public class ActivationController {
     public ResponseEntity<String> activation(@PathVariable String id) {
         return userActivationService.activate(id) ?
                 ResponseEntity.ok().body(REGISTRATION_SUCCESS) :
-                ResponseEntity.internalServerError().build();
+                ResponseEntity.badRequest().body(MessageUtil.INCORRECT_LINK);
     }
 }

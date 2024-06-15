@@ -1,19 +1,19 @@
 server:
-  port: 8085
+  port: ${NODE_PORT:8085}
 
 app:
-  link-for-files: http://127.0.0.1:8086/
-  doc-secret: YwgQfxWvap1sEMY63pNU
-  photo-secret: C220VomyPV0yTNTqiK8j
-  user-secret: hhuYny0KKbu5kBGWd2cK
+  link-for-files: ${HOST_URL:localhost}:${REST_SERVICE_PORT:8086}
+  doc-secret: ${DOC_SECRET:YwgQfxWvap1sEMY63pNU}
+  photo-secret: ${PHOTO_SECRET:C220VomyPV0yTNTqiK8j}
+  user-secret: ${USER_SECRET:hhuYny0KKbu5kBGWd2cK}
 
 bot:
   token: ${BOT_TOKEN:------------------------------}
   service:
     file-info:
-      uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}
+      uri: ${TG_BOT_FILE_INFO_URI:https://api.telegram.org/bot{token}/getFile?file_id={fileId}}
     file-storage:
-      uri: https://api.telegram.org/file/bot{token}/{filePath}
+      uri: ${TG_BOT_FILE_STORAGE_URI:https://api.telegram.org/file/bot{token}/{filePath}}
 
 logging:
   level:
@@ -27,9 +27,9 @@ logging:
 
 spring:
   datasource:
-    username: postgres
-    password: postgres
-    url: jdbc:postgresql://localhost:5433/shulan
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5433/shulan}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -43,19 +43,19 @@ spring:
           fetch_size: 100
           batch_size: 100
   flyway:
-    url: jdbc:postgresql://localhost:5433/shulan
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5433/shulan}
     locations: classpath:db/migration
-    user: postgres
-    password: postgres
+    user: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: redfan
-    password: redfan
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5673}
+    username: ${RABBIT_USERNAME:redfan}
+    password: ${RABBIT_PASSWORD:redfan}
     queues:
-      text-message-update: text_message_update
-      doc-message-update: doc_message_update
-      photo-message-update: photo_message_update
-      answer-message: answer_message
-      registration-mail: registration_mail
+      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update}
+      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update}
+      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update}
+      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message}
+      registration-mail: ${RABBIT_REGISTRATION_MAIL_QUEUE:registration_mail}

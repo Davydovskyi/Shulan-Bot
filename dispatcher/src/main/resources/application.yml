@@ -1,13 +1,13 @@
 server:
-  port: 8084
+  port: ${DISPATCHER_PORT:8084}
   ssl:
     enabled: false
 
 # (terminal) ssh -R 80:localhost:<port> serveo.net to create tunnel
 bot:
-  uri: https://dd4fbe31781d144183591b70b8ba6804.serveo.net
-  username: schulan_bot
-  token: ${BOT_TOKEN:----------------------------}
+  uri: ${TG_BOT_URI:https://dd4fbe31781d144183591b70b8ba6804.serveo.net}
+  username: ${TG_BOT_NAME:schulan_bot}
+  token: ${TG_BOT_TOKEN:-------------------------}
 
 logging:
   level:
@@ -21,12 +21,12 @@ logging:
 
 spring:
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: redfan
-    password: redfan
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5673}
+    username: ${RABBIT_USERNAME:redfan}
+    password: ${RABBIT_PASSWORD:redfan}
     queues:
-      text-message-update: text_message_update
-      doc-message-update: doc_message_update
-      photo-message-update: photo_message_update
-      answer-message: answer_message
+      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update}
+      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update}
+      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update}
+      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message}

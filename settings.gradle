@@ -1,8 +1,6 @@
 rootProject.name = 'schulan-bot'
 include 'dispatcher'
 include 'node'
-include 'common-jpa'
+include 'common'
 include 'rest-service'
-include 'common-utils'
 include 'mail-service'
-
