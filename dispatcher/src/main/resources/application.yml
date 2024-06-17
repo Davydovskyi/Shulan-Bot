@@ -4,10 +4,11 @@ server:
     enabled: false
 
 # (terminal) ssh -R 80:localhost:<port> serveo.net to create tunnel
+# ssh -R 80:localhost:8080 nokey@localhost.run
 bot:
-  uri: ${TG_BOT_URI:https://dd4fbe31781d144183591b70b8ba6804.serveo.net}
+  uri: ${TG_BOT_URI:----------------------------}
   username: ${TG_BOT_NAME:schulan_bot}
-  token: ${TG_BOT_TOKEN:-------------------------}
+  token: ${TG_BOT_TOKEN:---------------------------}
 
 logging:
   level:

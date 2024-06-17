@@ -20,8 +20,8 @@ spring:
     host: ${MAIL_HOST:smtp.mail.ru}
     port: ${MAIL_PORT:465}
     protocol: ${MAIL_PROTOCOL:smtps}
-    username: ${MAIL_USERNAME:----------------}
-    password: ${MAIL_PASSWORD:----------------}
+    username: ${MAIL_USERNAME:-------------------}
+    password: ${MAIL_PASSWORD:--------------------}
   rabbitmq:
     host: ${RABBIT_HOST:localhost}
     port: ${RABBIT_PORT:5673}

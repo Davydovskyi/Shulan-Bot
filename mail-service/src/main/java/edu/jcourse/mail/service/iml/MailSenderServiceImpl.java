@@ -1,6 +1,5 @@
 package edu.jcourse.mail.service.iml;
 
-
 import edu.jcourse.dto.MailParam;
 import edu.jcourse.mail.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
