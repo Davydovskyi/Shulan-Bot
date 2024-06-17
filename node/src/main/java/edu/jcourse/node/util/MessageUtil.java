@@ -7,6 +7,7 @@ public class MessageUtil {
     public static final String UNKNOWN_ERROR_MESSAGE = "Unknown error! Enter /cancel and Please try again!";
     public static final String CANCEL_PROCESS_MESSAGE = "Command canceled!";
     public static final String HELP_MESSAGE = """
+            This is a file sharing application: you can upload documents and photos and then share them with your friends.
             List of available commands:
             /registration - user registration;
             /cancel - cancel current command;

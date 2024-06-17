@@ -8,7 +8,7 @@ app:
   user-secret: ${USER_SECRET:hhuYny0KKbu5kBGWd2cK}
 
 bot:
-  token: ${BOT_TOKEN:-----------------------------}
+  token: ${BOT_TOKEN:--------------------------------}
   service:
     file-info:
       uri: ${TG_BOT_FILE_INFO_URI:https://api.telegram.org/bot{token}/getFile?file_id={fileId}}
@@ -54,8 +54,8 @@ spring:
     username: ${RABBIT_USERNAME:redfan}
     password: ${RABBIT_PASSWORD:redfan}
     queues:
-      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update}
-      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update}
-      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update}
-      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message}
-      registration-mail: ${RABBIT_REGISTRATION_MAIL_QUEUE:registration_mail}
+      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update_queue}
+      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update_queue}
+      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update_queue}
+      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message_queue}
+      registration-mail: ${RABBIT_REGISTRATION_MAIL_QUEUE:registration_mail_queue}

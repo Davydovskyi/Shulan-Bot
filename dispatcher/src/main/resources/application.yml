@@ -6,7 +6,7 @@ server:
 # (terminal) ssh -R 80:localhost:<port> serveo.net to create tunnel
 # ssh -R 80:localhost:8080 nokey@localhost.run
 bot:
-  uri: ${TG_BOT_URI:----------------------------}
+  uri: ${TG_BOT_URI:https://5893da02c19c26.lhr.life}
   username: ${TG_BOT_NAME:schulan_bot}
   token: ${TG_BOT_TOKEN:---------------------------}
 
@@ -27,7 +27,7 @@ spring:
     username: ${RABBIT_USERNAME:redfan}
     password: ${RABBIT_PASSWORD:redfan}
     queues:
-      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update}
-      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update}
-      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update}
-      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message}
+      text-message-update: ${RABBIT_TEXT_MESSAGE_UPDATE_QUEUE:text_message_update_queue}
+      doc-message-update: ${RABBIT_DOC_MESSAGE_UPDATE_QUEUE:doc_message_update_queue}
+      photo-message-update: ${RABBIT_PHOTO_MESSAGE_UPDATE_QUEUE:photo_message_update_queue}
+      answer-message: ${RABBIT_ANSWER_MESSAGE_QUEUE:answer_message_queue}
