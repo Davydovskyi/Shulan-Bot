@@ -68,3 +68,5 @@ The application has a microservice architecture.
 
 - Spring Data JPA
 - Hashids
+
+**Also, everything is ready for deployment on a VPS server, in particular on Beget**.
