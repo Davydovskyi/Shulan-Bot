@@ -2,7 +2,9 @@ server:
   port: ${NODE_PORT:8085}
 
 app:
-  link-for-files: ${HOST_URL:localhost}:${REST_SERVICE_PORT:8086}
+  #  TODO нужно откомментировать для локального запуска без traefik
+  #  link-for-files: ${HOST_URL:localhost}:${REST_SERVICE_PORT:8086}
+  link-for-files: ${TG_BOT_URI:http://localhost:8086}
   doc-secret: ${DOC_SECRET:YwgQfxWvap1sEMY63pNU}
   photo-secret: ${PHOTO_SECRET:C220VomyPV0yTNTqiK8j}
   user-secret: ${USER_SECRET:hhuYny0KKbu5kBGWd2cK}

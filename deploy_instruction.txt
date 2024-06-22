@@ -1,0 +1,118 @@
+1. Хостинг Beget:
+https://beget.com/ru/vps
+- создать виртуальную машину: ubuntu, 1 CPU core, 2 GB memory, 10 GB disk
+
+2. Страница управления доменами:
+https://cp.beget.com/domains
+- вставить домен в поле "Имя домена" (shulan-test.<login when you registered>.beget.tech)
+- выбрать перенаправелние на виртуальную машину.
+
+3. В терменале войти на виртуальную машину:
+- $ ssh root@<ip>
+- ввести пароль из почты после регистрации на Beget
+
+4. Добавление нового пользователя и установка ему пароля:
+- $ useradd redfan -m
+- $ passwd redfan (задаем пароль для пользователя redfan)
+
+5. Добавить нового пользователя в sudoerr (иначе, не будет работать команда sudo)
+- $ usermod -a -G sudo redfan
+
+6. Зайти под новым пользователем (ввод пароля не требуется):
+- $ su redfan
+
+7. Перейти в домашнюю директорию и просмотреть путь к текущей директории:
+- $ cd
+- $ pwd
+
+8. Установка докера на виртуалке.
+Устанавливаем служебные пакеты:
+- $ sudo apt-get update && sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+
+9. Добавляем ключ к официальному репозиторию Docker в систему:
+- $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+10. Добавляем репозиторий Docker:
+- $ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+11. Обновляем пакетный индекс APT:
+- $ sudo apt-get update
+
+12. Получаем список доступных версий Docker CE (Community Edition):
+- $ apt-cache madison docker-ce
+
+13. Устанавливаем конкретную версию Docker, указав её полностью.
+- $ sudo apt-get install docker-ce=5:20.10.13~3-0~ubuntu-jammy
+
+14. Проверяем, что docker успешно установился и процесс-демон работает:
+- $ sudo systemctl status docker
+Чтобы выйти из режима просмотра - нужно нажать Q.
+
+15. Добавляем текущего пользователя в docker группу, чтобы выполнять операции с docker-командой без sudo:
+- $ sudo usermod -aG docker redfan
+Выход с виртуалки, чтобы изменения вступили в силу:
+- $ exit
+
+16. Снова вход
+- $ ssh redfan@<ip>
+- ввести пароль, который создали для этого пользователя
+
+17. Проверка, что можно выполнять команды к докеру без sudo:
+- $ docker ps
+
+18. Создаем ключ SSH:
+- $ mkdir -p ~/.ssh
+- $ cd ~/.ssh
+- $ ssh-keygen -t rsa -b 2048 -f github_rsa
+
+19. Получаем публичный ключ и копируем его в буфер:
+- $ ssh-keygen -y -f ~/.ssh/github_rsa
+- копируем и вставляем на страницу https://github.com/settings/keys -> New SSH key
+
+20. Нужно создать конфиг на виртуалке для подключения к гиту.
+- $ touch config
+Использоуем редактор VI:
+- $ vi config
+
+21. В .ssh/config дописать:
+Host gitserv
+Hostname github.com
+User git
+IdentityFile ~/.ssh/github_rsa
+
+Чтобы сохранить файл в редакторе VI, нужно нажать Shift + двоеточие. Внизу появится двоеточие и мигающие курсор. Нужно ввести 2 английские буквы w и q. W — означает Write, а Q — означает Quit, т.е. выйти.
+
+22. Проверка соединение с github:
+$ ssh gitserv
+
+23.Дока с публичными ключами гитхаба:
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+
+24. Переходим в домашнюю директорию и клонируем нужный репозиторий со всей историей коммитов:
+- $ cd
+- $ git clone gitserv:Davydovskyi/Shulan-Bot.git
+- $ cd ~/Shulan-Bot
+
+25. Утилита для генерации хеша пароля:
+- $ sudo apt-get install apache2-utils
+Генерация хеша:
+- $ echo $(htpasswd -nbB admin "password")
+- копируем его в буфер и вставляем в .env вместо пароля для traefik(все знаки $ нужно экранировать, вместо 1$t4.... - 1$$t4....)
+- vi .env
+
+26. Утилита для работы с let's encrypt:
+- $ sudo apt install certbot
+
+27. Выпуск сертификата:
+- $ sudo certbot certonly --standalone -d schulan-test.<login when you registered>.beget.tech
+
+28. Копирование ключей:
+- $ mkdir /home/redfan/certs
+- $ sudo cp /etc/letsencrypt/live/schulan-test.<login when you registered>.beget.tech/fullchain.pem /home/redfan/certs/fullchain.pem
+- $ sudo cp /etc/letsencrypt/live/schulan-test.<login when you registered>.beget.tech/privkey.pem /home/redfan/certs/privkey.pem
+
+29. Запуск системы:
+- $ /bin/bash ~/Shulan-Bot/scripts/deploy.sh
+
+30. Админка Traefik:
+- https://schulan-test.<login when you registered>.beget.tech:9443/dashboard/#/

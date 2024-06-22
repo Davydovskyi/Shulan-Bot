@@ -79,7 +79,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String generateLink(Long id, LinkType linkType, CryptoUtil cryptoUtil) {
-        return linkAddress + linkType.getLink() + cryptoUtil.encrypt(id);
+        return linkAddress + "/api/" + linkType.getLink() + cryptoUtil.encrypt(id);
     }
 
     private AppDocument buildAppDocument(Document telegramDoc, BinaryContent persistentBinaryContent) {

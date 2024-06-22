@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import static edu.jcourse.restservice.util.MessageUtil.REGISTRATION_SUCCESS;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ActivationController {
     private final UserActivationService userActivationService;
 
-    @GetMapping("/activation/{id}")
+    @GetMapping("/users/activation/{id}")
     public ResponseEntity<String> activation(@PathVariable String id) {
         return userActivationService.activate(id) ?
                 ResponseEntity.ok().body(REGISTRATION_SUCCESS) :

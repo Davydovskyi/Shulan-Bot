@@ -18,13 +18,13 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
-@RequestMapping("/files")
+@RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
 
-    @GetMapping("/get-doc/{id}")
+    @GetMapping("/files/get-doc/{id}")
     public void getDoc(@PathVariable String id,
                        HttpServletResponse response) {
         //TODO для формирования badRequest добавить ControllerAdvice
@@ -42,7 +42,7 @@ public class FileController {
         writeContent(response, appDocument.getBinaryContent());
     }
 
-    @GetMapping("/get-photo/{id}")
+    @GetMapping("/files/get-photo/{id}")
     public void getPhoto(@PathVariable String id,
                          HttpServletResponse response) {
         //TODO для формирования badRequest добавить ControllerAdvice

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+ENV_FILE="./.env"
+
+# Обновление кода и деплой backend приложения
+pushd ~/Documents/work-projects/Shulan-Bot/ || exit
+pushd ~/Shulan-Bot/ || exit
+
+# Обновляем ветку master
+git pull origin master
+
+# Останавливаем старые контейнеры микросервисов и запускаем новые, с обновлённым кодом
+docker compose -f compose.yml --env-file $ENV_FILE down --timeout=60 --remove-orphans
+docker compose -f compose.yml --env-file $ENV_FILE up --build --detach
+
+popd || exit
