@@ -71,3 +71,14 @@ The application has a microservice architecture.
 - Hashids
 
 **Also, everything is ready for deployment on a VPS server, in particular on Beget**.
+
+To first deploy your application to a VPS, you need to:
+
+1. create your Telegram bot and fill in `TG_BOT_NAME` and `TG_BOT_TOKEN` in the **.env** file
+2. create your mail server and fill
+   in: `MAIL_HOST``MAIL_PORT`, `MAIL_PROTOCOL`, `MAIL_USERNAMEMAIL_USERNAME`, `MAIL_PASSWORD` in the **.env** file
+3. change `RABBIT_USERNAME`, `RABBIT_PASSWORD`, `POSTGRES_USERNAME`, `POSTGRES_PASSWORD` in the **.env** file
+4. run each of the commands in the **deploy_instruction.text** file
+5. after step 2 from the **deploy_instruction.text** file change `HOST_URL`, `TG_BOT_URI`, `ACTIVATION_URI` in **.env**
+   file
+6. after step 25 from the **deploy_instruction.text** file change `TRAEFIK_PASSWORD`
