@@ -1,7 +1,9 @@
 # Shulan-Bot
 
 *Telegram bot - File sharing application* <br>
-(Ready for deployment on a VPS server)
+A file can be uploaded to the bot, and once it is, you can share the download link with others.
+
+*Ready for deployment on a VPS server*
 
 ## Application structure
 
